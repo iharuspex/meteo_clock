@@ -1,0 +1,17 @@
+name = "meteo_clock"
+description = "Meteo clock on ATmega328p"
+version = "0.1.0-dev"
+
+authors = ["Artem Paraev"]
+maintainers = ["Artem Paraev <iharuspex@mail.ru>"]
+maintainers-logins = ["iharuspex"]
+
+[configuration.values]
+avrada_rts.AVR_MCU = "atmega328p"
+avrada_rts.Clock_Frequency = 16000000
+
+[[depends-on]]
+gnat_avr_elf = "^12.2.1"
+avrada_rts = "^2.0.1"
+avrada_mcu = "^2.0.2"
+avrada_lib = "^2.0.2"
