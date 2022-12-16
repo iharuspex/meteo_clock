@@ -41,7 +41,7 @@
         },
         {
            "label": "Flash via Arduino bootloader",
-           "command": "avrdude -p m328p -c arduino -P /dev/ttyUSB1 -b 115200 -U flash:w:${workspaceFolder}/bin/firmware.hex",
+           "command": "avrdude -p m328p -c arduino -P /dev/ttyUSB1 -b 57600 -U flash:w:${workspaceFolder}/bin/firmware.hex",
            "type": "shell",
            "args": [],
            "problemMatcher": [
