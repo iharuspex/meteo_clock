@@ -12,8 +12,8 @@ project Meteo_Clock is
    for Object_Dir use "obj/";
    for Create_Missing_Dirs use "True";
    for Exec_Dir use "bin";
-   for Main use ("meteo_clock.adb");
-
+   for Main use ("main.adb");
+   
    package Builder renames AVR_Tool_Options.Builder;
 
    package Compiler is
