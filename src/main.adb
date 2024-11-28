@@ -16,6 +16,8 @@ with Avrada_Rts_Config;
 
 with DS3231; use DS3231;
 
+--  with Float_Img; use Float_Img;
+
 with Interfaces; use Interfaces;
 with Ada.Unchecked_Conversion;
 
@@ -32,6 +34,7 @@ procedure Main is
 
    Seconds, Minutes, Hours, Day, Date, Month, Year : Unsigned_8;
    Temp                                            : Float;
+   F : Float := 0.55;
 
    --------------
    -- Get_Temp --
@@ -51,8 +54,28 @@ procedure Main is
       Temp := Temp + Float (Shift_Right (LSB, 6)) * 0.25;
    end Get_Temp;
 
+
+   function Image_F (Value : Float) return AStr5
+   is
+      function "+" is
+         new Ada.Unchecked_Conversion (Source => Float,
+                                       Target => Unsigned_16);
+      Result : AStr5;
+      Val_U16 : constant Unsigned_16 := +Value;
+   begin
+      U16_Img_Right (Val_U16, Result);
+      for I in Unsigned_8'(2) .. 4 loop
+         Result(I-1) := Result(I);
+      end loop;
+      Result(4) := '.';
+      return Result;
+   end Image_F;
+
+
    RT_Clock  : DS3231_RTC;
    Curr_Time : AVR.Real_Time.Time;
+
+   Now_Time : AVR.Real_Time.Time;
 
 begin
    UART.Init (Baud_115200_16MHz);
@@ -62,45 +85,21 @@ begin
    I2C.Master.Init;
    RT_Clock.Init (RTC_Address);
 
-   --  LED_Config := DD_Output;
+   LED_Config := DD_Output;
 
-   Put_Line (Image_F (F));
+   --  Put_Line (Float_To_String (F));
+
+   RT_Clock.Set_Time;
 
    loop
       Curr_Time := RT_Clock.Get_Time;
+      
+      Wait_Ms (500);
 
-      --  Put_Line (Time_Image (Curr_Time));
-
-      --  if RTC_Is_Present then
-      --     Get_Date;
-      --     Put (Hours);
-      --     Put (":");
-      --     Put (Minutes);
-      --     Put (":");
-      --     Put (Seconds);
-
-      --     Put (" day: ");
-      --     Put (Day);
-      --     Put (" ");
-      --     Put (Date);
-      --     Put ("-");
-      --     Put (Month);
-      --     Put ("-");
-      --     Put (Year);
-      --     --  Get_Temp;
-      --     --  Put (" temp: ");
-      --     --  Put (Unsigned_8 (Temp));
-      --     New_Line;
-      --  else
-      --     Put_Line ("Nop");
-      --  end if;
-
-      Wait_Ms (1_000);
-
-      --  LED := High;
-      --  Wait_Ms (500);
-      --  LED := Low;
-      --  Wait_Ms (500);
+      LED := High;
+      Wait_Ms (250);
+      LED := Low;
+      Wait_Ms (250);
    end loop;
 
 end Main;

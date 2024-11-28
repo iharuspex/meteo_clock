@@ -2,3 +2,7 @@
 /bin/
 /alire/
 /config/
+
+nano_test/*.elf
+nano_test/*.hex
+nano_test/*.o

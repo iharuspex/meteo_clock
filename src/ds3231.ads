@@ -12,6 +12,8 @@ package DS3231 is
 
    function Get_Time (Self : DS3231_RTC) return AVR.Real_Time.Time;
 
+   procedure Set_Time (Self : DS3231_RTC);
+
 private
    type DS3231_RTC is tagged record
       Address : AVR.I2C.I2C_Address;
