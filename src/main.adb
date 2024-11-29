@@ -16,6 +16,9 @@ with Avrada_Rts_Config;
 
 with DS3231; use DS3231;
 
+-- Note: get MCU name and  Freq from .mmcu section for simavr support
+-- simavr/simavr/sim/avr/avr_mcu_section.h will be helpful
+
 --  with Float_Img; use Float_Img;
 
 with Interfaces; use Interfaces;

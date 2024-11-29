@@ -8,7 +8,10 @@
       "ada.projectFile": "meteo_clock.gpr",
       "ada.defaultCharset": "utf-8",
       "editor.tabSize": 3,
-      "editor.insertSpaces": true
+      "editor.insertSpaces": true,
+      "files.associations": {
+         "sim_avr.h": "c"
+      }
     },
     "tasks": {
      "version": "2.0.0",

@@ -1,12 +1,6 @@
-#Контроллер, установленный на плате. Может быть другим, например atmega328 
 DEVICE     = atmega328p
-
-#Тактовая частота 16 МГц 
 CLOCK      = 16000000
-
-#Команда запуска avrdude. Ее нужно скопировать из Arduino IDE.
-AVRDUDE = avrdude -p m328p -c arduino -P /dev/ttyUSB0 -b 57600
-
+AVRDUDE    = avrdude -p m328p -c arduino -P /dev/ttyUSB0 -b 57600
 OBJECTS    = main.o
 
 COMPILE = avr-gcc -Wall -O0 -g3 -DF_CPU=$(CLOCK) -mmcu=$(DEVICE)
