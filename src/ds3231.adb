@@ -3,6 +3,7 @@ with AVR.UART; use AVR.UART;
 package body DS3231 is
    use AVR.I2C;
    use AVR.I2C.Master;
+   use AVR.Real_Time;
 
    ----------
    -- Init --
@@ -18,7 +19,9 @@ package body DS3231 is
       Detect_Device (Self.Address, RTC_Is_Present);
 
       if RTC_Is_Present then
-         Put_Line ("DS3231: ok");
+         Put ("DS3231: ok");
+         New_Line;
+         CRLF;
       end if;
 
       Send (Self.Address, CONTROL_REG);
@@ -70,6 +73,16 @@ package body DS3231 is
    function Get_Time (Self : DS3231_RTC) return AVR.Real_Time.Time is
       Seconds, Minutes, Hours, Day, Date, Month, Year : Unsigned_8;
 
+      --  Seconds : Second_Number;
+      --  Minutes : Minute_Number;
+      --  Hours : Hour_Number;
+
+      --  Day : Day_Number;
+      --  Date : Day_Number;
+      --  Month : Month_Number;
+      --  Year : Year_Number;
+
+
       Curr_Time : AVR.Real_Time.Time;
    begin
       Send (Self.Address, SECONDS_REG);
@@ -79,11 +92,11 @@ package body DS3231 is
       if Data_Is_Available then
          Seconds := Get;
          Minutes := Get;
-         Hours   := Get;
-         Day     := Get;
-         Date    := Get;
-         Month   := Get;
-         Year    := Get;
+         Hours := Get;
+         Day := Get;
+         Date := Get;
+         Month := Get;
+         Year := Get;
 
          Seconds :=
            Shift_Right (Seconds and 2#1111_0000#, 4) * 10
@@ -105,6 +118,17 @@ package body DS3231 is
            Shift_Right (Year and 2#1111_0000#, 4) * 10
            + (Year and 2#0000_1111#);
       end if;
+      
+      
+      Put ("From RTC:");
+      CRLF;
+
+      Put (Year);
+      Put ("-");
+      Put (Month);
+      Put ("-");
+      Put (Date);
+      Put (" ");
 
       Put (Hours);
       Put (":");
@@ -112,14 +136,26 @@ package body DS3231 is
       Put (":");
       Put (Seconds);
 
-      Put (" day: ");
+      Put (" Week day: ");
       Put (Day);
-      Put (" ");
-      Put (Date);
-      Put ("-");
-      Put (Month);
-      Put ("-");
-      Put (Year);
+
+      CRLF;
+
+      Curr_Time :=
+        AVR.Real_Time.Time_Of
+          (Year   => Year_Number (Year),
+           Month  => Month_Number (Month),
+           Day    => Day_Number (Date),
+           Hour   => Hour_Number (Hours),
+           Minute => Minute_Number (Minutes),
+           Second => Second_Number (Seconds));
+
+      Put ("From Real_Time:");
+      CRLF;
+      
+      Put (Image (Curr_Time));
+      --  Put (Unsigned_8 (Hour(Curr_Time)));
+      CRLF;
       New_Line;
 
       return Curr_Time;
@@ -131,31 +167,33 @@ package body DS3231 is
 
    procedure Set_Time (Self : DS3231_RTC) is
 
-      -- Test time is 6:59:52 day: 5 29-11-24
+      -- Test time is 6:59:52 day: 5 1-12-24
 
-      Seconds  : Unsigned_8 := 52;
-      Minutes  : Unsigned_8 := 59;
-      Hours    : Unsigned_8 := 6;
-      Day      : Unsigned_8 := 5;
-      Date     : Unsigned_8 := 29; 
-      Month    : Unsigned_8 := 11;
-      Year     : Unsigned_8 := 24;
+      Seconds : Unsigned_8 := 52;
+      Minutes : Unsigned_8 := 59;
+      Hours   : Unsigned_8 := 6;
+
+      Day     : Unsigned_8 := 5;
+
+      Date    : Unsigned_8 := 1;
+      Month   : Unsigned_8 := 12;
+      Year    : Unsigned_8 := 24;
    begin
       Seconds := Shift_Left (Seconds / 10, 4) + (Seconds rem 10);
       Minutes := Shift_Left (Minutes / 10, 4) + (Minutes rem 10);
       Hours := Shift_Left (Hours / 10, 4) + (Hours rem 10);
       Day := Day and 2#0000_0111#;
-      Date  := Shift_Left (Date / 10, 4) + (Date rem 10);
-      Month  := Shift_Left (Month / 10, 4) + (Month rem 10);
-      Year  := Shift_Left (Year / 10, 4) + (Year rem 10);
+      Date := Shift_Left (Date / 10, 4) + (Date rem 10);
+      Month := Shift_Left (Month / 10, 4) + (Month rem 10);
+      Year := Shift_Left (Year / 10, 4) + (Year rem 10);
 
-      Self.Set_Register(SECONDS_REG, Seconds);
-      Self.Set_Register(MINUTES_REG, Minutes);
-      Self.Set_Register(HOURS_REG, Hours);
-      Self.Set_Register(DAY_REG, Day);
-      Self.Set_Register(DATE_REG, Date);
-      Self.Set_Register(MONTH_CENTURY_REG, Month);
-      Self.Set_Register(YEAR_REG, Year);
+      Self.Set_Register (SECONDS_REG, Seconds);
+      Self.Set_Register (MINUTES_REG, Minutes);
+      Self.Set_Register (HOURS_REG, Hours);
+      Self.Set_Register (DAY_REG, Day);
+      Self.Set_Register (DATE_REG, Date);
+      Self.Set_Register (MONTH_CENTURY_REG, Month);
+      Self.Set_Register (YEAR_REG, Year);
 
    end Set_Time;
 

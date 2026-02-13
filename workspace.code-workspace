@@ -2,6 +2,12 @@
     "folders": [
       {
         "path": "."
+      },
+      {
+         "path": "./tests/sim"
+      },
+      {
+         "path": "./tests/c_blink"
       }
     ],
     "settings": {
@@ -10,8 +16,13 @@
       "editor.tabSize": 3,
       "editor.insertSpaces": true,
       "files.associations": {
-         "sim_avr.h": "c"
-      }
+         "sim_avr.h": "c",
+         "avr_mcu_section.h": "c",
+         "sim_gdb.h": "c",
+         "sim_elf.h": "c"
+      },
+      "makefile.makefilePath": "./tests/c_blink/Makefile",
+      "makefile.configureOnOpen": false
     },
     "tasks": {
      "version": "2.0.0",

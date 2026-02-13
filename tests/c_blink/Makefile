@@ -3,12 +3,12 @@ CLOCK      = 16000000
 AVRDUDE    = avrdude -p m328p -c arduino -P /dev/ttyUSB0 -b 57600
 OBJECTS    = main.o
 
-COMPILE = avr-gcc -Wall -O0 -g3 -DF_CPU=$(CLOCK) -mmcu=$(DEVICE)
+COMPILE = avr-gcc -Wall -Og -g3 -DF_CPU=$(CLOCK) -mmcu=$(DEVICE)
 
 all:	main.hex
 
 .c.o:
-	$(COMPILE) -c $< -o $@
+	$(COMPILE)  -I/usr/include/simavr -Wl,--print-memory-usage -Wl,--gc-sections -Wl,--undefined=_mmcu,--section-start=.mmcu=0x910000 -c $< -o $@
 
 .S.o:
 	$(COMPILE) -x assembler-with-cpp -c $< -o $@

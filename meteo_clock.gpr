@@ -5,7 +5,7 @@ with "avrada_lib.gpr";
 
 project Meteo_Clock is
 
-   for Target use "avr";
+   for Target use AVRAda_RTS'Target;
    for Runtime ("Ada") use AVRAda_RTS'Project_Dir;
 
    for Source_Dirs use ("src/", "config/");
@@ -13,19 +13,39 @@ project Meteo_Clock is
    for Create_Missing_Dirs use "True";
    for Exec_Dir use "bin";
    for Main use ("main.adb");
-   
+
    package Builder renames AVR_Tool_Options.Builder;
 
    package Compiler is
-      for Default_Switches ("Ada") use AVR_Tool_Options.ALL_ADAFLAGS;
+      for Default_Switches ("Ada") use
+         AVR_Tool_Options.ALL_ADAFLAGS
+         -- & ("-Wl,--undefined=_mmcu,--section-start=.mmcu=0x910000")
+         ;
    end Compiler;
 
    package Binder is
       for Switches ("Ada") use AVR_Tool_Options.Binder_Switches;
    end Binder;
 
+   -- package Linker is
+   --    for Switches ("Ada") use
+   --       ("-Wl,--print-memory-usage")
+   --       & AVR_Tool_Options.Linker_Switches
+   --       -- & ("-Wl,--script=/home/haruspex/projects/ada/meteo_clock/mmcu.ld")
+   --       & ("-Wl,--undefined=_mmcu,--section-start=.mmcu=0x910000")
+   --       ;
+   -- end Linker;
+
    package Linker is
-      for Switches ("Ada") use ("-Wl,--print-memory-usage") & AVR_Tool_Options.Linker_Switches;
+      for Switches ("Ada") use
+         ("-Wl,--print-memory-usage",
+         "-mmcu=" & Avr_Tool_Options.MCU,
+         "-Wl,--gc-sections", -- remove sections of unused code
+         "-g",                -- keep binder file (needed???)
+         "-Wl,--relax"        -- linker relaxation is a must on AVR
+         )
+         & ("-Wl,--undefined=_mmcu,--section-start=.mmcu=0x910000")
+         ;
    end Linker;
 
 end Meteo_Clock;

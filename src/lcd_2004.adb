@@ -15,11 +15,11 @@ package body LCD_2004 is
    procedure Delay_50us is new AVR.Wait.Generic_Wait_USecs
      (Crystal_Hertz => Avrada_Rts_Config.Clock_Frequency, Micro_Seconds => 50);
 
-   -----------------------
-   -- Write_Byte_To_LCD --
-   -----------------------
+   ----------------
+   -- Write_Byte --
+   ----------------
 
-   procedure Write_Byte_To_LCD (Byte : Unsigned_8) is
+   procedure Write_Byte (Byte : Unsigned_8) is
    begin
       AVR.I2C.Master.Send (Display_Address, Byte);
    end Write_Byte_To_LCD;
@@ -29,7 +29,7 @@ package body LCD_2004 is
    -----------
 
    procedure E_Set (Status : Boolean) is
-   begin 
+   begin
       if Status = True then
          LCD_Port_Data := LCD_Port_Data or 16#4#;
       else

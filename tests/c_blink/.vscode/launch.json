@@ -7,12 +7,12 @@
         {
             "type": "gdb",
             "request": "attach",
-            "name": "Attach to gdbserver",
-            "executable": "${workspaceFolder}/bin/main.elf",
+            "name": "c_blink",
+            "executable": "${workspaceFolder}/tests/c_blink/main.elf",
             "target": "0.0.0.0:1234",
             "remote": true,
-            "cwd": "${workspaceRoot}", 
-            "gdbpath": "/home/haruspex/alire_dir/toolchains/gnat_avr_elf_12.2.1_8e59f77f/bin/avr-gdb",
+            "cwd": "${workspaceRoot}/tests/c_blink/", 
+            "gdbpath": "/usr/bin/avr-gdb",
             // "preLaunchTask": "Run simavr",
             "autorun": [
                     // "any gdb commands to initiate your environment, if it is needed"
